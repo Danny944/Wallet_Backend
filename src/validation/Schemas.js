@@ -19,12 +19,13 @@ export const resetSchema = Joi.object({
 export const payBillSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
   bill_type: Joi.string().required(),
-  bill_account: Joi.number().required(),
+  bill_account_number: Joi.number().integer().min(0).max(9999999999).required(),
   amount: Joi.number().positive().precision(2).required(),
   currency_code: Joi.string().required(),
   description: Joi.string().required(),
 });
 
+account_number, bill_type, amount, currency_code, description;
 export const getBillSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
   bill_id: Joi.number().required(),
@@ -32,15 +33,14 @@ export const getBillSchema = Joi.object({
 
 export const depositSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
-  deposit_currency: Joi.string().required(),
   amount: Joi.number().positive().precision(2).required(),
-  account_currency: Joi.string().required(),
+  deposit_currency: Joi.string().required(),
   description: Joi.string().required(),
 });
 
 export const getDepositSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
-  deposit_id: Joi.number().required(),
+  deposit_id: Joi.string().required(),
 });
 
 export const getDepositsOnAccountSchema = Joi.object({
@@ -58,4 +58,19 @@ export const transferSchema = Joi.object({
   amount: Joi.number().positive().precision(2).required(),
   currency_code: Joi.string().required(),
   description: Joi.string().required(),
+});
+
+export const getTransferSchema = Joi.object({
+  account_number: Joi.number().integer().min(0).max(9999999999).required(),
+  transfer_id: Joi.string().required(),
+});
+
+export const getTransfersOnAccountSchema = Joi.object({
+  account_number: Joi.number().integer().min(0).max(9999999999).required(),
+  currency_code: Joi.string().required(),
+});
+
+export const getBillsOnAccountSchema = Joi.object({
+  account_number: Joi.number().integer().min(0).max(9999999999).required(),
+  currency_code: Joi.string().required(),
 });

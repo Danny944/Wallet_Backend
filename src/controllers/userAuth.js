@@ -15,7 +15,7 @@ export async function createAUserProfile(req, res) {
     if (!data) {
       return res.status(400).json({ error: "Invalid Request" });
     }
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token);
     return res.status(201).json({
       message: "REGISTRATION SUCESSFULL",
       Your_Details: userData,

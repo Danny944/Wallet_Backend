@@ -10,7 +10,7 @@ export async function createADefaultAccount(req, res) {
   try {
     const user_email = req.user_email;
     const data = await createDefaultAccount(user_email);
-    const { account_details, account_number } = data;
+    const { account_details } = data;
     if (!data) {
       return res
         .status(400)
@@ -75,11 +75,9 @@ export async function getASpecificAccount(req, res) {
     const account_number = req.body.account_number;
     const data = await getSpecificAccount(user_email, account_number);
     if (!data) {
-      return res
-        .status(400)
-        .json({
-          error: `No account with account_number ${account_number} exists`,
-        });
+      return res.status(400).json({
+        error: `No account with account_number ${account_number} exists`,
+      });
     }
     return res.status(201).json({
       message: "ACCOUNT",
@@ -98,11 +96,9 @@ export async function deleteAnAccount(req, res) {
     const account_number = req.body.account_number;
     const data = await deleteAccount(user_email, account_number);
     if (!data) {
-      return res
-        .status(400)
-        .json({
-          error: `No account with account_number ${account_number} exists`,
-        });
+      return res.status(400).json({
+        error: `No account with account_number ${account_number} exists`,
+      });
     }
     return res.status(201).json({
       message: "ACCOUNT DELETED SUCCESSFULLY",

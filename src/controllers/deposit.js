@@ -9,6 +9,11 @@ export async function depositToAnAccount(req, res) {
     if (!data) {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
+    if (data === "You are not allowed to carry out this action") {
+      return res
+        .status(400)
+        .json({ error: "You are not allowed to carry out this action" });
+    }
     return res.status(201).json({
       message: "Deposit successful",
       deposit_details: data.resulting,

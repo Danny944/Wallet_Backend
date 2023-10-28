@@ -8,6 +8,7 @@
 import client from "../config/db.js";
 import { payBillSchema } from "../validation/Schemas.js";
 import { getBillSchema } from "../validation/Schemas.js";
+import { currencyConverter } from "./layer.js";
 
 async function getAccountBalance(account_number) {
   const query = `
@@ -16,6 +17,18 @@ async function getAccountBalance(account_number) {
     WHERE account_number = $1`;
   const { rows } = await client.query(query, [account_number]);
   return rows[0].account_balance;
+}
+
+async function getReceiverAccountBalance(account_number) {
+  const query = `
+      SELECT *
+      FROM account 
+      WHERE account_number = $1 `;
+  const values = [account_number];
+  const { rows } = await client.query(query, values);
+  const balance = parseFloat(rows[0].account_balance);
+  const currency = rows[0].currency_code;
+  return { balance, currency };
 }
 
 async function updateAccountBalance(account_number, amount) {
@@ -40,11 +53,18 @@ export async function makeBillPayment(user_email, payload) {
   const {
     account_number,
     bill_type,
-    bill_account,
+    bill_account_number,
     amount,
     currency_code,
     description,
   } = value;
+  if (
+    bill_type !== "airtime" ||
+    bill_type !== "betting" ||
+    bill_type !== "electricity"
+  ) {
+    return "We currently do not support this bill type at the moment";
+  }
   try {
     const account_balance = await getAccountBalance(account_number);
     if (account_balance < amount) {
@@ -53,26 +73,49 @@ export async function makeBillPayment(user_email, payload) {
     }
     const new_balance_sender = account_balance - amount;
 
-    const receiver_balance = await getAccountBalance(bill_account);
+    const receiver = await getReceiverAccountBalance(bill_account_number);
     if (!receiver_balance) {
-      return "Bill account doesn't exist";
+      return "No account associated with provided account number";
     }
+    const receiver_balance = receiver.balance;
+    const bill_receiver_currency = receiver.currency;
     console.log(`reciever account correct, balance: ${receiver_balance}`);
-    const new_balance_receiver = receiver_balance + amount;
+    if (currency_code !== bill_receiver_currency) {
+      const data = await currencyConverter(
+        bill_receiver_currency,
+        currency_code,
+        amount
+      );
+      const converted_amount = data.result;
+      const new_balance_receiver = receiver_balance + converted_amount;
 
-    const result3 = await updateAccountBalance(
-      account_number,
-      new_balance_sender
-    );
-    console.log(result3);
-    const result4 = await updateAccountBalance(
-      bill_account,
-      new_balance_receiver
-    );
-    console.log(result4);
+      const result3 = await updateAccountBalance(
+        account_number,
+        new_balance_sender
+      );
+      console.log(result3);
+      const result4 = await updateAccountBalance(
+        bill_account_number,
+        new_balance_receiver
+      );
+      console.log(result4);
+    } else {
+      const new_balance_receiver = receiver_balance + amount;
+
+      const result3 = await updateAccountBalance(
+        account_number,
+        new_balance_sender
+      );
+      console.log(result3);
+      const result4 = await updateAccountBalance(
+        bill_account_number,
+        new_balance_receiver
+      );
+      console.log(result4);
+    }
 
     const query5 = `
-    INSERT INTO bills (user_email, bill_type, description, account_number, currency_code, amount )
+    INSERT INTO bills (user_email, bill_type, description, account_number, currency_code, amount, bill_account_number )
     VALUES ($1, $2, $3, $4, $5, $6, $7)
     `;
     const values5 = [
@@ -82,6 +125,7 @@ export async function makeBillPayment(user_email, payload) {
       account_number,
       currency_code,
       amount,
+      bill_account_number,
     ];
     const result5 = await client.query(query5, values5);
     console.log(result5.rows[0]);
@@ -96,7 +140,7 @@ export async function makeBillPayment(user_email, payload) {
 // Get Specific Bill Payment Information
 // /accounts/:id/bill/:billId
 
-export async function getBillPayment(payload) {
+export async function getBillPayment(user_email, payload) {
   const { value, error } = getBillSchema.validate(payload);
   if (error) {
     console.log(error);
@@ -107,9 +151,9 @@ export async function getBillPayment(payload) {
     const query = `
     SELECT *
     FROM bills
-    WHERE bill_id = $1 AND account_number = $2
+    WHERE bill_id = $1 AND account_number = $2 AND user_email = $3
   `;
-    const values = [bill_id, account_number];
+    const values = [bill_id, account_number, user_email];
     const result = await client.query(query, values);
     if (!result.rows[0]) {
       console.log("No bill found");
@@ -123,13 +167,27 @@ export async function getBillPayment(payload) {
   }
 }
 
-// const payload = {
-//   account_number: 1023456885,
-//   bill_id: 1,
-// };
-// // const decoded = {
-// //   user_email: "fadehandaniel2006@gmail.com",
-// // };
-
-// // makeBillPayment(decoded, payload);
-// getBillPayment(payload);
+export async function getBillsOnAccount(user_email, payload) {
+  const { value, error } = getDepositsOnAccountSchema.validate(payload);
+  if (error) {
+    console.log(error);
+    return "Invalid Request";
+  }
+  const { account_number, currency_code } = value;
+  try {
+    const query = `
+      SELECT *
+      FROM bills
+      WHERE account_number = $1 AND currency_code = $2 AND user_email = $3
+    `;
+    const values = [account_number, currency_code, user_email];
+    const result = await client.query(query, values);
+    if (!result.rows[0]) {
+      return "No Bills Associated with this account";
+    }
+    return result.rows;
+  } catch (error) {
+    console.error(err.message);
+    throw err;
+  }
+}

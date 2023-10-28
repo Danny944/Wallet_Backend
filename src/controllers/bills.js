@@ -4,7 +4,7 @@ import { getBillPayment } from "../models/bills.js";
 export async function makeABillPayment(req, res) {
   try {
     const user_email = req.user_email;
-    const data = await makeBillPayment(user_email);
+    const data = await makeBillPayment(user_email, req.body);
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
@@ -31,6 +31,7 @@ export async function makeABillPayment(req, res) {
 
 export async function getABillPayment(req, res) {
   try {
+    const user_email = req.user_email;
     const data = await getBillPayment(req.body);
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });

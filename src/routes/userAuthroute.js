@@ -9,7 +9,7 @@ import { authUser } from "../middlewares/authuser.js";
 import { authUserReset } from "../middlewares/authuser.js";
 
 authUserRoute.post("/create-user-profile", createAUserProfile);
-authUserRoute.post("/log-user", authUser, logUser);
+authUserRoute.post("/log-user", logUser);
 authUserRoute.post("/send-reset-link", sendAResetLink);
 authUserRoute.put("/reset-password/:token", authUserReset, resetPassword);
 
