@@ -2,6 +2,7 @@ import { transferToAccount } from "../models/tranfers.js";
 import { getTransfer } from "../models/tranfers.js";
 import { getTransfersOnAccount } from "../models/tranfers.js";
 
+// Transfer funds to another account
 export async function transferToAnAccount(req, res) {
   try {
     const user_email = req.user_email;
@@ -40,6 +41,7 @@ export async function transferToAnAccount(req, res) {
   }
 }
 
+// Get details for a specific transfer
 export async function getATransfer(req, res) {
   try {
     const user_email = req.user_email;
@@ -66,6 +68,7 @@ export async function getATransfer(req, res) {
   }
 }
 
+// Get transfers associated with a user's account
 export async function getTransfersOnAnAccount(req, res) {
   try {
     const user_email = req.user_email;

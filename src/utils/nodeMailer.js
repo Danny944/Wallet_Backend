@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 
+// Send an email with a password reset link to the recipient
 export async function sendEmail(recipient, token) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -28,6 +29,7 @@ export async function sendEmail(recipient, token) {
   }
 }
 
+// Send a registration success email to the recipient
 export async function sendRegisterEmail(recipient) {
   const transporter = nodemailer.createTransport({
     service: "gmail",

@@ -2,6 +2,7 @@ import { withdraw } from "../models/withdrawals";
 import { getWithdrawal } from "../models/withdrawals";
 import { getWithdrawalsOnAccount } from "../models/withdrawals";
 
+// Withdraw cash from an account
 export async function withdrawCash(req, res) {
   try {
     const user_email = req.user_email;
@@ -26,6 +27,7 @@ export async function withdrawCash(req, res) {
   }
 }
 
+// Get details of a specific withdrawal
 export async function getAWithdrawal(req, res) {
   try {
     const user_email = req.user_email;
@@ -54,6 +56,7 @@ export async function getAWithdrawal(req, res) {
   }
 }
 
+// Get a list of withdrawals for a specific account
 export async function getWithdrawalOnAnAccount(req, res) {
   try {
     const user_email = req.user_email;

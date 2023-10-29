@@ -1,9 +1,3 @@
-// Authentication Routes
-// /auth/users             // Users create a profile
-// /auth/users/login       // Login
-// /auth/users/forgot-password // Forgot password
-// /auth/users/reset-password/:token // Reset password
-
 import client from "../config/db.js";
 import { hashPassword } from "../utils/hash.js";
 import { passwordMatches } from "../utils/hash.js";
@@ -14,6 +8,7 @@ import { resetSchema } from "../validation/Schemas.js";
 import { sendEmail } from "../utils/nodeMailer.js";
 import { sendRegisterEmail } from "../utils/nodeMailer.js";
 
+// Check if a user with the specified email exists in the database.
 async function checkIfUserExists(email) {
   const query = `
   SELECT COUNT(*) as count
@@ -25,7 +20,7 @@ async function checkIfUserExists(email) {
   return +result.rows[0].count;
 }
 
-//Create an account
+// Create a user profile and store it in the database.
 export async function createUserProfile(payload) {
   const { error, value } = createProfileSchema.validate(payload);
   if (error) {
@@ -65,6 +60,7 @@ export async function createUserProfile(payload) {
   }
 }
 
+// Authenticate a user's login and generate an authentication token.
 export async function userLogin(payload) {
   const { error, value } = loginSchema.validate(payload);
   if (error) {
@@ -100,6 +96,7 @@ export async function userLogin(payload) {
   }
 }
 
+// Send a reset password link to a user's email.
 export const sendResetLink = async (payload) => {
   const { error, value } = resetSchema.validate(payload);
   if (error) {
@@ -124,6 +121,7 @@ export const sendResetLink = async (payload) => {
   }
 };
 
+// Reset a user's password in the database.
 export async function reset(email, userPassword) {
   const { password, confirm_password } = userPassword;
   if (password !== confirm_password) {

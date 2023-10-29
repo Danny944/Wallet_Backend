@@ -1,23 +1,6 @@
 import { verifyToken } from "../utils/jwt.js";
 
-export const authUserGeneral = (req, res, next) => {
-  // const token = req.cookies.token;
-  const token = req.headers["authorization"];
-
-  if (!token) {
-    return res.status(401).json({ message: "UNAUTHORIZED" });
-  } else {
-    try {
-      const decoded = verifyToken(token);
-      req.user = decoded;
-      next();
-    } catch (error) {
-      return res.status(403).json({ message: "INVALID TOKEN" });
-      // next(error)
-    }
-  }
-};
-
+// Authenticate user based on JWT token in request headers
 export const authUser = async (req, res, next) => {
   // const token = req.cookies.token;
   const authHeader = req.headers["authorization"];
@@ -38,6 +21,7 @@ export const authUser = async (req, res, next) => {
   }
 };
 
+// Authenticate user for password reset using token from request parameters
 export const authUserReset = (req, res, next) => {
   const token = req.params.token;
   console.log(token);

@@ -2,6 +2,7 @@ import { makeBillPayment } from "../models/bills.js";
 import { getBillPayment } from "../models/bills.js";
 import { getBillsOnAccount } from "../models/bills.js";
 
+// Make a bill payment
 export async function makeABillPayment(req, res) {
   try {
     const user_email = req.user_email;
@@ -40,6 +41,7 @@ export async function makeABillPayment(req, res) {
   }
 }
 
+// Get details for a specific bill payment
 export async function getABillPayment(req, res) {
   try {
     const user_email = req.user_email;
@@ -68,6 +70,7 @@ export async function getABillPayment(req, res) {
   }
 }
 
+// Get bills associated with a user's account
 export async function getBillsOnAnAccount(req, res) {
   try {
     const user_email = req.user_email;

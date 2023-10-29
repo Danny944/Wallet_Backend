@@ -1,6 +1,7 @@
-// GET /convert
 import axios from "axios";
 
+// Perform currency conversion using an external API based on sender and
+//receiver currencies and an amount.
 export async function currencyConverter(
   receiver_currency,
   sender_currency,

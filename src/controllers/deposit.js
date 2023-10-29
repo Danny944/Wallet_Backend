@@ -2,6 +2,7 @@ import { depositToAccount } from "../models/deposit.js";
 import { getDeposit } from "../models/deposit.js";
 import { getDepositsOnAccount } from "../models/deposit.js";
 
+// Deposit funds into an account
 export async function depositToAnAccount(req, res) {
   try {
     const user_email = req.user_email;
@@ -26,6 +27,7 @@ export async function depositToAnAccount(req, res) {
   }
 }
 
+// Get details for a specific deposit on an account
 export async function getADeposit(req, res) {
   try {
     const user_email = req.user_email;
@@ -52,6 +54,7 @@ export async function getADeposit(req, res) {
   }
 }
 
+// Get deposits associated with a user's account
 export async function getDepositsOnAnAccount(req, res) {
   try {
     const user_email = req.user_email;

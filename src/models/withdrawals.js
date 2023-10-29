@@ -1,17 +1,3 @@
-/*
-// Withdraw from an account
-/accounts/:id/withdrawals
-
-// Get details on a specific account
-/accounts/:id/withdrawals
-
-// Get details for a specific withdrawal on a specific account
-/accounts/:account_id/withdrawals/:id
-
-// Get withdrawal details on a specific account
-/accounts/:account_id/transfers/:id
-*/
-
 import client from "../config/db.js";
 import {
   getWithdrawalsOnAccountSchema,
@@ -19,6 +5,7 @@ import {
 } from "../validation/Schemas.js";
 import { getWithdrawalSchema } from "../validation/Schemas.js";
 
+// Withdraw funds from a user's account, updating balance and recording the transaction.
 export async function withdraw(user_email, payload) {
   const { error, value } = withdrawSchema.validate(payload);
   if (error) {
@@ -77,6 +64,7 @@ export async function withdraw(user_email, payload) {
   }
 }
 
+// Retrieve the details of a specific withdrawal.
 export async function getWithdrawal(user_email, payload) {
   const { value, error } = getWithdrawalSchema.validate(payload);
   if (error) {
@@ -109,6 +97,7 @@ export async function getWithdrawal(user_email, payload) {
   }
 }
 
+// Retrieve details of withdrawals associated with a specific account.
 export async function getWithdrawalsOnAccount(user_email, payload) {
   const { value, error } = getWithdrawalsOnAccountSchema.validate(payload);
   if (error) {

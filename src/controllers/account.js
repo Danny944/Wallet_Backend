@@ -6,6 +6,7 @@ import {
   deleteAccount,
 } from "../models/account.js";
 
+// Create a default account for the user.
 export async function createADefaultAccount(req, res) {
   try {
     const user_email = req.user_email;
@@ -27,6 +28,7 @@ export async function createADefaultAccount(req, res) {
   }
 }
 
+// Create an account in a specific currency for the user.
 export async function createAnAccountInACurrency(req, res) {
   try {
     const user_email = req.user_email;
@@ -49,6 +51,7 @@ export async function createAnAccountInACurrency(req, res) {
   }
 }
 
+// Retrieve all accounts associated with the user.
 export async function getTheAccounts(req, res) {
   try {
     const user_email = req.user_email;
@@ -69,6 +72,7 @@ export async function getTheAccounts(req, res) {
   }
 }
 
+// Retrieve details of a specific user account.
 export async function getASpecificAccount(req, res) {
   try {
     const user_email = req.user_email;
@@ -90,6 +94,7 @@ export async function getASpecificAccount(req, res) {
   }
 }
 
+// Delete a user's account.
 export async function deleteAnAccount(req, res) {
   try {
     const user_email = req.user_email;

@@ -4,6 +4,7 @@ import { getBillSchema } from "../validation/Schemas.js";
 import { getBillsOnAccountSchema } from "../validation/Schemas.js";
 import { currencyConverter } from "./layer.js";
 
+// Retrieve the account balance of a user's account.
 async function getAccountBalance(account_number) {
   const query = `
     SELECT account_balance 
@@ -13,6 +14,7 @@ async function getAccountBalance(account_number) {
   return rows[0].account_balance;
 }
 
+// Retrieve the account balance and currency code for a receiver's account.
 async function getReceiverAccountBalance(account_number) {
   const query = `
       SELECT *
@@ -25,6 +27,7 @@ async function getReceiverAccountBalance(account_number) {
   return { balance, currency };
 }
 
+// Update the account balance of a user's account.
 async function updateAccountBalance(account_number, amount) {
   const query = `
     UPDATE account
@@ -137,6 +140,7 @@ export async function makeBillPayment(user_email, payload) {
   }
 }
 
+// Make a bill payment and update account balances accordingly.
 export async function getBillPayment(user_email, payload) {
   const { value, error } = getBillSchema.validate(payload);
   if (error) {
@@ -169,6 +173,7 @@ export async function getBillPayment(user_email, payload) {
   }
 }
 
+// Retrieve bill details associated with a specific account.
 export async function getBillsOnAccount(user_email, payload) {
   const { value, error } = getBillsOnAccountSchema.validate(payload);
   if (error) {

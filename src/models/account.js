@@ -135,12 +135,3 @@ export async function deleteAccount(user_email, account_number) {
     throw err;
   }
 }
-
-// const decoded = {
-//   user_email: "fadehandaniel2006@gmail.com",
-// };
-// createDefaultAccount(decoded);
-// createAccountInACurrency(decoded, "USD");
-// getAccounts(decoded);
-// getSpecificAccount(decoded, 1023456891);
-// deleteAccount(decoded, 1023456891);

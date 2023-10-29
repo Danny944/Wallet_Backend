@@ -4,8 +4,7 @@ import { getDepositSchema } from "../validation/Schemas.js";
 import { getDepositsOnAccountSchema } from "../validation/Schemas.js";
 import { currencyConverter } from "./layer.js";
 
-// Deposit to a specific account
-// /accounts/:id/deposits
+// Deposit funds into a user's account, updating balance and recording the transaction.
 export async function depositToAccount(user_email, payload) {
   const { error, value } = depositSchema.validate(payload);
   if (error) {
@@ -106,9 +105,7 @@ export async function depositToAccount(user_email, payload) {
   }
 }
 
-// Get details for a specific deposit on a specific account
-// /accounts/:account_id/deposits/:id
-// */
+// Retrieve the details of a specific deposit.
 export async function getDeposit(user_email, payload) {
   const { value, error } = getDepositSchema.validate(payload);
   if (error) {
@@ -141,6 +138,7 @@ export async function getDeposit(user_email, payload) {
   }
 }
 
+// Retrieve details of deposits associated with a specific account.
 export async function getDepositsOnAccount(user_email, payload) {
   const { value, error } = getDepositsOnAccountSchema.validate(payload);
   if (error) {

@@ -3,6 +3,7 @@ import { userLogin } from "../models/userAuth.js";
 import { sendResetLink } from "../models/userAuth.js";
 import { reset } from "../models/userAuth.js";
 
+// Create a user profile
 export async function createAUserProfile(req, res) {
   try {
     const data = await createUserProfile(req.body);
@@ -28,6 +29,7 @@ export async function createAUserProfile(req, res) {
   }
 }
 
+// Log in a user
 export async function logUser(req, res) {
   try {
     const data = await userLogin(req.body);
@@ -52,6 +54,7 @@ export async function logUser(req, res) {
   }
 }
 
+// Send a password reset link
 export async function sendAResetLink(req, res) {
   try {
     const data = await sendResetLink(req.body);
@@ -74,6 +77,7 @@ export async function sendAResetLink(req, res) {
   }
 }
 
+// Reset the user's password
 export async function resetPassword(req, res) {
   try {
     const { email } = await req.user_email;
