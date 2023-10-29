@@ -32,18 +32,24 @@ export async function transferToAnAccount(req, res) {
   }
 }
 
-export async function getADeposit(req, res) {
+export async function getATransfer(req, res) {
   try {
     const user_email = req.user_email;
-    const data = await getDeposit(user_email, req.body);
+    const data = await getTransfer(user_email, req.body);
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
-    if (!data) {
-      return res.status(400).json({ error: "No deposit found" });
+    if (data === "You are not allowed to carry out this action") {
+      return res
+        .status(400)
+        .json({ error: "You are not allowed to carry out this action" });
+    }
+
+    if (data === "No transfer found") {
+      return res.status(400).json({ error: "No transfer found" });
     }
     return res.status(201).json({
-      message: "Deposit details",
+      message: "Transfer details",
       details: data,
     });
   } catch (error) {
@@ -53,18 +59,23 @@ export async function getADeposit(req, res) {
   }
 }
 
-export async function getDepositsOnAnAccount(req, res) {
+export async function getTransfersOnAnAccount(req, res) {
   try {
     const user_email = req.user_email;
-    const data = await getDepositsOnAccount(user_email, req.body);
+    const data = await getTransfersOnAccount(user_email, req.body);
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
+    if (data === "You are not allowed to carry out this action") {
+      return res
+        .status(400)
+        .json({ error: "You are not allowed to carry out this action" });
+    }
     if (!data) {
-      return res.status(400).json({ error: "No deposit found" });
+      return res.status(400).json({ error: "No transfers found" });
     }
     return res.status(201).json({
-      message: "Deposit details",
+      message: "Transfer details",
       details: data,
     });
   } catch (error) {

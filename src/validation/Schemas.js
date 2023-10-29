@@ -25,7 +25,6 @@ export const payBillSchema = Joi.object({
   description: Joi.string().required(),
 });
 
-account_number, bill_type, amount, currency_code, description;
 export const getBillSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
   bill_id: Joi.number().required(),

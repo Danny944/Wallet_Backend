@@ -1,16 +1,12 @@
-/*
-// Transfer to another account
-/accounts/:id/transfers
+//Account Transfers
 
-// Get transfer details on a specific account
-/accounts/:id/transfers
-*/
 import client from "../config/db.js";
 import { currencyConverter } from "./layer.js";
 import { transferSchema } from "../validation/Schemas.js";
 import { getTransferSchema } from "../validation/Schemas.js";
 import { getTransfersOnAccountSchema } from "../validation/Schemas.js";
 
+// Retrieve the account balance of a user's account.
 async function getAccountBalance(account_number, email) {
   const query = `
       SELECT account_balance 
@@ -22,6 +18,7 @@ async function getAccountBalance(account_number, email) {
   return parseFloat(rows[0].account_balance);
 }
 
+// Retrieve the account balance and currency code for a receiver's account.
 async function getReceiverAccountBalance(account_number) {
   const query = `
       SELECT *
@@ -34,6 +31,7 @@ async function getReceiverAccountBalance(account_number) {
   return { balance, currency };
 }
 
+// Update the account balance of a user's account.
 async function updateAccountBalance(account_number, amount) {
   const query = `
       UPDATE account
@@ -46,6 +44,7 @@ async function updateAccountBalance(account_number, amount) {
   return result.rows[0];
 }
 
+// Transfer funds from one user's account to another.
 export async function transferToAccount(user_email, payload) {
   const { error, value } = transferSchema.validate(payload);
   if (error) {
@@ -146,6 +145,7 @@ export async function transferToAccount(user_email, payload) {
   }
 }
 
+// Retrieve the details of a specific transfer.
 export async function getTransfer(user_email, payload) {
   const { value, error } = getTransferSchema.validate(payload);
   if (error) {
@@ -157,13 +157,17 @@ export async function getTransfer(user_email, payload) {
     const query = `
       SELECT *
       FROM transfers
-      WHERE transfer_id = $1 AND account_number = $2 AND user_email = $3
+      WHERE transfer_id = $1 AND account_number = $2
     `;
-    const values = [transfer_id, account_number, user_email];
+    const values = [transfer_id, account_number];
     const result = await client.query(query, values);
-    if (!result.rows[0]) {
-      console.log("No deposit found");
-      return false;
+    if (result.rows[0].user_email !== user_email) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
+    }
+    if (result.rows[0] > 0) {
+      console.log("No transfer found");
+      return "No transfer found";
     }
     console.log(result.rows[0]);
     return result.rows[0];
@@ -173,7 +177,7 @@ export async function getTransfer(user_email, payload) {
   }
 }
 
-// Get details of transfers on a specific account
+// Retrieve details of transfers on a specific account.
 export async function getTransfersOnAccount(user_email, payload) {
   const { value, error } = getTransfersOnAccountSchema.validate(payload);
   if (error) {
@@ -185,10 +189,14 @@ export async function getTransfersOnAccount(user_email, payload) {
     const query = `
       SELECT *
       FROM transfers
-      WHERE account_number = $1 AND currency_code = $2 AND user_email = $3
+      WHERE account_number = $1 AND currency_code = $2 
     `;
-    const values = [account_number, currency_code, user_email];
+    const values = [account_number, currency_code];
     const result = await client.query(query, values);
+    if (result.rows[0].user_email !== user_email) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
+    }
     if (!result.rows[0]) {
       return false;
     }

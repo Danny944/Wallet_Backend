@@ -3,7 +3,6 @@ import { depositSchema } from "../validation/Schemas.js";
 import { getDepositSchema } from "../validation/Schemas.js";
 import { getDepositsOnAccountSchema } from "../validation/Schemas.js";
 import { currencyConverter } from "./layer.js";
-import { getBillsOnAccountSchema } from "../validation/Schemas.js";
 
 // Deposit to a specific account
 // /accounts/:id/deposits
@@ -138,7 +137,7 @@ export async function getDeposit(user_email, payload) {
 }
 
 export async function getDepositsOnAccount(user_email, payload) {
-  const { value, error } = getBillsOnAccountSchema.validate(payload);
+  const { value, error } = getDepositsOnAccountSchema.validate(payload);
   if (error) {
     console.log(error);
     return "Invalid Request";

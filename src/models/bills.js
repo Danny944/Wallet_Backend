@@ -1,13 +1,7 @@
-/*
-/accounts/:id/bill
-
-// Get Specific Bill Payment Information
-/accounts/:id/bill/:billId
-*/
-
 import client from "../config/db.js";
 import { payBillSchema } from "../validation/Schemas.js";
 import { getBillSchema } from "../validation/Schemas.js";
+import { getBillsOnAccountSchema } from "../validation/Schemas.js";
 import { currencyConverter } from "./layer.js";
 
 async function getAccountBalance(account_number) {
@@ -16,7 +10,9 @@ async function getAccountBalance(account_number) {
     FROM account 
     WHERE account_number = $1`;
   const { rows } = await client.query(query, [account_number]);
-  return rows[0].account_balance;
+  const balance = rows[0].account_balance;
+  const email = rows[0].user_email;
+  return { balance, email };
 }
 
 async function getReceiverAccountBalance(account_number) {
@@ -59,14 +55,21 @@ export async function makeBillPayment(user_email, payload) {
     description,
   } = value;
   if (
-    bill_type !== "airtime" ||
-    bill_type !== "betting" ||
+    bill_type !== "airtime" &&
+    bill_type !== "betting" &&
     bill_type !== "electricity"
   ) {
     return "We currently do not support this bill type at the moment";
   }
   try {
-    const account_balance = await getAccountBalance(account_number);
+    const account = await getAccountBalance(account_number);
+    const email = account.email;
+    if (user_email !== email) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
+    }
+    const account_balance = account.balance;
+
     if (account_balance < amount) {
       console.log("Insufficient funds");
       return "Insufficient funds";
@@ -74,7 +77,7 @@ export async function makeBillPayment(user_email, payload) {
     const new_balance_sender = account_balance - amount;
 
     const receiver = await getReceiverAccountBalance(bill_account_number);
-    if (!receiver_balance) {
+    if (!receiver) {
       return "No account associated with provided account number";
     }
     const receiver_balance = receiver.balance;
@@ -115,8 +118,9 @@ export async function makeBillPayment(user_email, payload) {
     }
 
     const query5 = `
-    INSERT INTO bills (user_email, bill_type, description, account_number, currency_code, amount, bill_account_number )
+    INSERT INTO bills (user_email, bill_type, description, source_account_number, currency_code, amount, bill_account_number )
     VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING *
     `;
     const values5 = [
       user_email,
@@ -151,10 +155,14 @@ export async function getBillPayment(user_email, payload) {
     const query = `
     SELECT *
     FROM bills
-    WHERE bill_id = $1 AND account_number = $2 AND user_email = $3
+    WHERE bill_id = $1 AND account_number = $2
   `;
-    const values = [bill_id, account_number, user_email];
+    const values = [bill_id, account_number];
     const result = await client.query(query, values);
+    if (result.rows[0].user_email !== user_email) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
+    }
     if (!result.rows[0]) {
       console.log("No bill found");
       return false;
@@ -168,7 +176,7 @@ export async function getBillPayment(user_email, payload) {
 }
 
 export async function getBillsOnAccount(user_email, payload) {
-  const { value, error } = getDepositsOnAccountSchema.validate(payload);
+  const { value, error } = getBillsOnAccountSchema.validate(payload);
   if (error) {
     console.log(error);
     return "Invalid Request";
@@ -182,6 +190,10 @@ export async function getBillsOnAccount(user_email, payload) {
     `;
     const values = [account_number, currency_code, user_email];
     const result = await client.query(query, values);
+    if (result.rows[0].user_email !== user_email) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
+    }
     if (!result.rows[0]) {
       return "No Bills Associated with this account";
     }
