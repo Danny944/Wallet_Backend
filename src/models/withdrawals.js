@@ -13,7 +13,10 @@
 */
 
 import client from "../config/db.js";
-import { withdrawSchema } from "../validation/Schemas.js";
+import {
+  getWithdrawalsOnAccountSchema,
+  withdrawSchema,
+} from "../validation/Schemas.js";
 import { getWithdrawalSchema } from "../validation/Schemas.js";
 
 export async function withdraw(user_email, payload) {
@@ -107,7 +110,7 @@ export async function getWithdrawal(user_email, payload) {
 }
 
 export async function getWithdrawalsOnAccount(user_email, payload) {
-  const { value, error } = getDepositsOnAccountSchema.validate(payload);
+  const { value, error } = getWithdrawalsOnAccountSchema.validate(payload);
   if (error) {
     console.log(error);
     return "Invalid Request";
