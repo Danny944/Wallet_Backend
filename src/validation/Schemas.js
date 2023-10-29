@@ -30,6 +30,11 @@ export const getBillSchema = Joi.object({
   bill_id: Joi.number().required(),
 });
 
+export const getBillsOnAccountSchema = Joi.object({
+  account_number: Joi.number().integer().min(0).max(9999999999).required(),
+  currency_code: Joi.string().required(),
+});
+
 export const depositSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
   amount: Joi.number().positive().precision(2).required(),
@@ -69,7 +74,19 @@ export const getTransfersOnAccountSchema = Joi.object({
   currency_code: Joi.string().required(),
 });
 
-export const getBillsOnAccountSchema = Joi.object({
+export const withdrawSchema = Joi.object({
+  account_number: Joi.number().integer().min(0).max(9999999999).required(),
+  amount: Joi.number().positive().precision(2).required(),
+  account_currency: Joi.string().required(),
+  description: Joi.string().required(),
+});
+
+export const getWithdrawalSchema = Joi.object({
+  account_number: Joi.number().integer().min(0).max(9999999999).required(),
+  withdrawal_id: Joi.string().required(),
+});
+
+export const getWithdrawalsOnAccountSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
   currency_code: Joi.string().required(),
 });

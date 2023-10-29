@@ -120,14 +120,19 @@ export async function getDeposit(user_email, payload) {
     const query = `
       SELECT *
       FROM deposits
-      WHERE deposit_id = $1 AND account_number = $2 AND user_email = $3
+      WHERE deposit_id = $1 AND account_number = $2 
     `;
-    const values = [deposit_id, account_number, user_email];
+    const values = [deposit_id, account_number];
     const result = await client.query(query, values);
     if (!result.rows[0]) {
       console.log("No deposit found");
       return false;
     }
+    if (result.rows[0].user_email !== user_email) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
+    }
+
     console.log(result.rows[0]);
     return result.rows[0];
   } catch (error) {
@@ -147,12 +152,16 @@ export async function getDepositsOnAccount(user_email, payload) {
     const query = `
       SELECT *
       FROM deposits
-      WHERE account_number = $1 AND currency_code = $2 AND user_email = $3
+      WHERE account_number = $1 AND currency_code = $2 
     `;
-    const values = [account_number, currency_code, user_email];
+    const values = [account_number, currency_code];
     const result = await client.query(query, values);
     if (!result.rows[0]) {
       return false;
+    }
+    if (result.rows[0].user_email !== user_email) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
     }
     return result.rows;
   } catch (error) {

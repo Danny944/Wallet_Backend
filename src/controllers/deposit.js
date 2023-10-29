@@ -36,6 +36,11 @@ export async function getADeposit(req, res) {
     if (!data) {
       return res.status(400).json({ error: "No deposit found" });
     }
+    if (data === "You are not allowed to carry out this action") {
+      return res
+        .status(400)
+        .json({ error: "You are not allowed to carry out this action" });
+    }
     return res.status(201).json({
       message: "Deposit details",
       details: data,
@@ -57,6 +62,12 @@ export async function getDepositsOnAnAccount(req, res) {
     if (!data) {
       return res.status(400).json({ error: "No deposit found" });
     }
+    if (data === "You are not allowed to carry out this action") {
+      return res
+        .status(400)
+        .json({ error: "You are not allowed to carry out this action" });
+    }
+
     return res.status(201).json({
       message: "Deposit details",
       details: data,

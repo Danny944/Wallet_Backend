@@ -63,6 +63,10 @@ export async function transferToAccount(user_email, payload) {
       user_account_number,
       user_email
     );
+    if (!sender_account_balance) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
+    }
     if (sender_account_balance < amount) {
       console.log("Insufficient funds");
       return "Insufficient funds";
@@ -161,14 +165,17 @@ export async function getTransfer(user_email, payload) {
     `;
     const values = [transfer_id, account_number];
     const result = await client.query(query, values);
+
+    if (!result.rows[0]) {
+      console.log("No transfer found");
+      return "No transfer found";
+    }
+
     if (result.rows[0].user_email !== user_email) {
       console.log("You are not allowed to carry out this action");
       return "You are not allowed to carry out this action";
     }
-    if (result.rows[0] > 0) {
-      console.log("No transfer found");
-      return "No transfer found";
-    }
+
     console.log(result.rows[0]);
     return result.rows[0];
   } catch (error) {
@@ -193,13 +200,14 @@ export async function getTransfersOnAccount(user_email, payload) {
     `;
     const values = [account_number, currency_code];
     const result = await client.query(query, values);
+    if (!result.rows[0]) {
+      return false;
+    }
     if (result.rows[0].user_email !== user_email) {
       console.log("You are not allowed to carry out this action");
       return "You are not allowed to carry out this action";
     }
-    if (!result.rows[0]) {
-      return false;
-    }
+
     return result.rows;
   } catch (error) {
     console.error(err.message);

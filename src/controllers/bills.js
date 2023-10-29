@@ -47,15 +47,15 @@ export async function getABillPayment(req, res) {
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
-    if (data === "You are not allowed to carry out this action") {
-      return res
-        .status(400)
-        .json({ error: "You are not allowed to carry out this action" });
-    }
     if (!data) {
       return res.status(400).json({
         error: "No bill history with Id ",
       });
+    }
+    if (data === "You are not allowed to carry out this action") {
+      return res
+        .status(400)
+        .json({ error: "You are not allowed to carry out this action" });
     }
     return res.status(201).json({
       message: "Bill Payment",
@@ -75,16 +75,17 @@ export async function getBillsOnAnAccount(req, res) {
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
-    if (data === "You are not allowed to carry out this action") {
-      return res
-        .status(400)
-        .json({ error: "You are not allowed to carry out this action" });
-    }
     if (data === "No Bills Associated with this account") {
       return res
         .status(400)
         .json({ error: "No Bills Associated with this account" });
     }
+    if (data === "You are not allowed to carry out this action") {
+      return res
+        .status(400)
+        .json({ error: "You are not allowed to carry out this action" });
+    }
+
     return res.status(201).json({
       message: "Bill payments",
       details: data,

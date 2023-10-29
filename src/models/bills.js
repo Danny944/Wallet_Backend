@@ -10,9 +10,7 @@ async function getAccountBalance(account_number) {
     FROM account 
     WHERE account_number = $1`;
   const { rows } = await client.query(query, [account_number]);
-  const balance = rows[0].account_balance;
-  const email = rows[0].user_email;
-  return { balance, email };
+  return rows[0].account_balance;
 }
 
 async function getReceiverAccountBalance(account_number) {
@@ -62,13 +60,11 @@ export async function makeBillPayment(user_email, payload) {
     return "We currently do not support this bill type at the moment";
   }
   try {
-    const account = await getAccountBalance(account_number);
-    const email = account.email;
-    if (user_email !== email) {
+    const account_balance = await getAccountBalance(account_number);
+    if (!account_balance) {
       console.log("You are not allowed to carry out this action");
       return "You are not allowed to carry out this action";
     }
-    const account_balance = account.balance;
 
     if (account_balance < amount) {
       console.log("Insufficient funds");
@@ -141,9 +137,6 @@ export async function makeBillPayment(user_email, payload) {
   }
 }
 
-// Get Specific Bill Payment Information
-// /accounts/:id/bill/:billId
-
 export async function getBillPayment(user_email, payload) {
   const { value, error } = getBillSchema.validate(payload);
   if (error) {
@@ -159,14 +152,15 @@ export async function getBillPayment(user_email, payload) {
   `;
     const values = [bill_id, account_number];
     const result = await client.query(query, values);
-    if (result.rows[0].user_email !== user_email) {
-      console.log("You are not allowed to carry out this action");
-      return "You are not allowed to carry out this action";
-    }
     if (!result.rows[0]) {
       console.log("No bill found");
       return false;
     }
+    if (result.rows[0].user_email !== user_email) {
+      console.log("You are not allowed to carry out this action");
+      return "You are not allowed to carry out this action";
+    }
+
     console.log(result.rows[0]);
     return result.rows[0];
   } catch (error) {
@@ -190,13 +184,14 @@ export async function getBillsOnAccount(user_email, payload) {
     `;
     const values = [account_number, currency_code, user_email];
     const result = await client.query(query, values);
+    if (!result.rows[0]) {
+      return "No Bills Associated with this account";
+    }
     if (result.rows[0].user_email !== user_email) {
       console.log("You are not allowed to carry out this action");
       return "You are not allowed to carry out this action";
     }
-    if (!result.rows[0]) {
-      return "No Bills Associated with this account";
-    }
+
     return result.rows;
   } catch (error) {
     console.error(err.message);

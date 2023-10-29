@@ -12,9 +12,17 @@ export async function transferToAnAccount(req, res) {
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
+
+    if (data === "You are not allowed to carry out this action") {
+      return res
+        .status(400)
+        .json({ error: "You are not allowed to carry out this action" });
+    }
+
     if (data === "Insufficient funds") {
       return res.status(400).json({ error: "Insufficient funds" });
     }
+
     if (data === "No user with the provided account number exists") {
       return res
         .status(400)
@@ -39,14 +47,13 @@ export async function getATransfer(req, res) {
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
+    if (data === "No transfer found") {
+      return res.status(400).json({ error: "No transfer found" });
+    }
     if (data === "You are not allowed to carry out this action") {
       return res
         .status(400)
         .json({ error: "You are not allowed to carry out this action" });
-    }
-
-    if (data === "No transfer found") {
-      return res.status(400).json({ error: "No transfer found" });
     }
     return res.status(201).json({
       message: "Transfer details",
@@ -66,13 +73,13 @@ export async function getTransfersOnAnAccount(req, res) {
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Error Invalid Request" });
     }
+    if (!data) {
+      return res.status(400).json({ error: "No transfers found" });
+    }
     if (data === "You are not allowed to carry out this action") {
       return res
         .status(400)
         .json({ error: "You are not allowed to carry out this action" });
-    }
-    if (!data) {
-      return res.status(400).json({ error: "No transfers found" });
     }
     return res.status(201).json({
       message: "Transfer details",
