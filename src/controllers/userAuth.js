@@ -80,7 +80,7 @@ export async function sendAResetLink(req, res) {
 // Reset the user's password
 export async function resetPassword(req, res) {
   try {
-    const { email } = await req.user_email;
+    const { email } = await req.user;
     const data = await reset(email, req.body);
     if (!data) {
       return res.status(400).json({ error: "Passwords don't match" });

@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 
 // Send an email with a password reset link to the recipient
 export async function sendEmail(recipient, token) {
+  console.log(token);
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {

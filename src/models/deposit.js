@@ -92,7 +92,7 @@ export async function depositToAccount(user_email, payload) {
         description,
         account_number,
         amount,
-        account_currency,
+        deposit_currency,
       ];
       const result3 = await client.query(query3, values3);
       const resulting = result3.rows[0];
@@ -145,14 +145,14 @@ export async function getDepositsOnAccount(user_email, payload) {
     console.log(error);
     return "Invalid Request";
   }
-  const { account_number, currency_code } = value;
+  const { account_number } = value;
   try {
     const query = `
       SELECT *
       FROM deposits
-      WHERE account_number = $1 AND currency_code = $2 
+      WHERE account_number = $1
     `;
-    const values = [account_number, currency_code];
+    const values = [account_number];
     const result = await client.query(query, values);
     if (!result.rows[0]) {
       return false;

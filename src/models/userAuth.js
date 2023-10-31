@@ -122,7 +122,7 @@ export const sendResetLink = async (payload) => {
 };
 
 // Reset a user's password in the database.
-export async function reset(email, userPassword) {
+export async function reset(user_email, userPassword) {
   const { password, confirm_password } = userPassword;
   if (password !== confirm_password) {
     console.log("Passwords don't match");
@@ -137,7 +137,7 @@ export async function reset(email, userPassword) {
       WHERE user_email = $2
       RETURNING *
     `;
-    const values0 = [hashedPassword, email];
+    const values0 = [hashedPassword, user_email];
     const result = await client.query(query0, values0);
     console.log(result.rowCount);
     if (result.rowCount === 0) {

@@ -5,10 +5,13 @@ import { withdrawCash } from "../controllers/withdrawals.js";
 import { getAWithdrawal } from "../controllers/withdrawals.js";
 import { getWithdrawalOnAnAccount } from "../controllers/withdrawals.js";
 import { authUser } from "../middlewares/authuser.js";
-import { getWithdrawalsOnAccount } from "../models/withdrawals.js";
 
-depositRoute.post("/withdraw-cash", authUser, withdrawCash);
-depositRoute.get("/get-withdrawal", authUser, getAWithdrawal);
-depositRoute.get("/get-all-withdrawals", authUser, getWithdrawalsOnAccount);
+withdrawalsRoute.post("/withdraw-cash", authUser, withdrawCash);
+withdrawalsRoute.get("/get-withdrawal", authUser, getAWithdrawal);
+withdrawalsRoute.get(
+  "/get-all-withdrawals",
+  authUser,
+  getWithdrawalOnAnAccount
+);
 
 export default withdrawalsRoute;

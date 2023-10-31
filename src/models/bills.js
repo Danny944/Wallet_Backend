@@ -152,10 +152,11 @@ export async function getBillPayment(user_email, payload) {
     const query = `
     SELECT *
     FROM bills
-    WHERE bill_id = $1 AND account_number = $2
+    WHERE bill_id = $1 AND source_account_number = $2
   `;
     const values = [bill_id, account_number];
     const result = await client.query(query, values);
+    console.log(result.rows);
     if (!result.rows[0]) {
       console.log("No bill found");
       return false;
@@ -180,14 +181,14 @@ export async function getBillsOnAccount(user_email, payload) {
     console.log(error);
     return "Invalid Request";
   }
-  const { account_number, currency_code } = value;
+  const { account_number } = value;
   try {
     const query = `
       SELECT *
       FROM bills
-      WHERE account_number = $1 AND currency_code = $2 AND user_email = $3
+      WHERE source_account_number = $1 AND user_email = $2
     `;
-    const values = [account_number, currency_code, user_email];
+    const values = [account_number, user_email];
     const result = await client.query(query, values);
     if (!result.rows[0]) {
       return "No Bills Associated with this account";

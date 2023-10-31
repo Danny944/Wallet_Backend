@@ -1,6 +1,6 @@
-import { withdraw } from "../models/withdrawals";
-import { getWithdrawal } from "../models/withdrawals";
-import { getWithdrawalsOnAccount } from "../models/withdrawals";
+import { withdraw } from "../models/withdrawals.js";
+import { getWithdrawal } from "../models/withdrawals.js";
+import { getWithdrawalsOnAccount } from "../models/withdrawals.js";
 
 // Withdraw cash from an account
 export async function withdrawCash(req, res) {

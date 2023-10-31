@@ -82,7 +82,7 @@ export async function transferToAccount(user_email, payload) {
       // Currency conversion is required
       const data = await currencyConverter(
         receiver_currency,
-        sender_currency,
+        currency_code,
         amount
       );
       console.log(data);
@@ -191,14 +191,14 @@ export async function getTransfersOnAccount(user_email, payload) {
     console.log(error);
     return "Invalid Request";
   }
-  const { account_number, currency_code } = value;
+  const { account_number } = value;
   try {
     const query = `
       SELECT *
       FROM transfers
-      WHERE account_number = $1 AND currency_code = $2 
+      WHERE account_number = $1 
     `;
-    const values = [account_number, currency_code];
+    const values = [account_number];
     const result = await client.query(query, values);
     if (!result.rows[0]) {
       return false;

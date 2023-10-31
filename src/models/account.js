@@ -55,7 +55,7 @@ export async function createAccountInACurrency(user_email, currency) {
     //Create the account
     const query1 = `
       INSERT INTO account(user_email, currency_code, account_balance, account_status)
-      VALUES ($1, $2, $3)
+      VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
     const values = [user_email, currency, balance, status];
