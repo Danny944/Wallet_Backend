@@ -32,7 +32,6 @@ export async function getAllTransactions(user_email) {
       console.log("No transactions found");
       return false;
     }
-
     console.log(result.rows[0]);
     return result.rows;
   } catch (error) {

@@ -37,6 +37,9 @@ export async function logUser(req, res) {
     if (data === "Invalid Request") {
       return res.status(400).json({ error: "Invalid Request" });
     }
+    if (data === "User doesn't exist") {
+      return res.status(400).json({ error: "Invalid Email/ Password" });
+    }
 
     if (!data) {
       return res.status(400).json({ error: "Invalid Email/ Password" });

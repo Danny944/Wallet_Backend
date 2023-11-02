@@ -28,3 +28,28 @@ export async function currencyConverter(
     throw error;
   }
 }
+
+export async function getCurrencyList() {
+  const apiKey = "A3cdWZEWju4CO0f1RnblKW9LRKirtb62";
+  const url = "https://api.apilayer.com/currency_data/list";
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        apikey: apiKey,
+      },
+    });
+
+    const data = response.data;
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+export function isSupportedCurrency(currencyCode, currencyList) {
+  return currencyList.hasOwnProperty(currencyCode);
+}

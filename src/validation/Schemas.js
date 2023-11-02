@@ -87,3 +87,7 @@ export const getWithdrawalsOnAccountSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
   currency_code: Joi.string().required(),
 });
+
+export const currencySchema = Joi.object({
+  currency_code: Joi.string().required(),
+});

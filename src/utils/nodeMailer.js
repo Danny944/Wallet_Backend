@@ -55,3 +55,28 @@ export async function sendRegisterEmail(recipient) {
     throw new Error("Email could not be sent.");
   }
 }
+
+export async function sendAdminRegisterEmail(recipient) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "fadehandaniel2006@gmail.com",
+      pass: "tjio hfws okxo dywz",
+    },
+  });
+
+  const mailOptions = {
+    from: "fadehandaniel2006@gmail.com",
+    to: recipient,
+    subject: "ADMIN REGISTRATION SUCCESSFUL",
+    text: "Thank you for registering as an admin with DANNY PHATHOM TESTS",
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.response);
+  } catch (error) {
+    console.log(error);
+    throw new Error("Email could not be sent.");
+  }
+}
