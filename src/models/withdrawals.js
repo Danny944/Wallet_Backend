@@ -24,10 +24,14 @@ export async function withdraw(user_email, payload) {
     const result = await client.query(query, values);
     console.log(result.rows[0]);
     const account_balance = parseFloat(result.rows[0].account_balance);
-
     if (!result.rows[0]) {
       return "You are not allowed to carry out this action";
     }
+    if (account_balance < amount) {
+      console.log("Insufficient funds");
+      return "Insufficient funds";
+    }
+
     const new_balance = account_balance - amount;
     const new_balance_db = new_balance.toFixed(2);
 
@@ -108,7 +112,7 @@ export async function getWithdrawalsOnAccount(user_email, payload) {
   try {
     const query = `
         SELECT *
-        FROM deposits
+        FROM withdrawals
         WHERE account_number = $1 AND currency_code = $2 
       `;
     const values = [account_number, currency_code];

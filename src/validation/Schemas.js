@@ -5,6 +5,7 @@ export const createProfileSchema = Joi.object({
   last_name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
+  token: Joi.string().required(),
 });
 
 export const loginSchema = Joi.object({
@@ -90,4 +91,8 @@ export const getWithdrawalsOnAccountSchema = Joi.object({
 
 export const currencySchema = Joi.object({
   currency_code: Joi.string().required(),
+});
+
+export const accountSchema = Joi.object({
+  account_number: Joi.number().integer().min(0).max(9999999999).required(),
 });

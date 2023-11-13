@@ -12,3 +12,14 @@ export async function generateToken(payload) {
 export async function verifyToken(generatedToken) {
   return jwt.verify(generatedToken, "IIVSIUVISUBCIBUIWVFYUVWVY");
 }
+
+export async function generateAdminToken(payload) {
+  const generatedToken = jwt.sign(payload, "IOSNCNCSOCINOICOIIKCI", {
+    expiresIn: "24h",
+  });
+  return generatedToken;
+}
+
+export async function verifyAdminToken(generatedToken) {
+  return jwt.verify(generatedToken, "IOSNCNCSOCINOICOIIKCI");
+}

@@ -15,6 +15,11 @@ export async function withdrawCash(req, res) {
         .status(400)
         .json({ error: "You are not allowed to carry out this action" });
     }
+    if (data === "Insufficient funds") {
+      return res.status(400).json({
+        error: "You do not have sufficient funds to complete this transaction",
+      });
+    }
     return res.status(201).json({
       message: "Withdrawal successful",
       withdrawal_details: data.resulting,
@@ -74,7 +79,7 @@ export async function getWithdrawalOnAnAccount(req, res) {
     }
 
     return res.status(201).json({
-      message: "Deposit details",
+      message: "Withdrawals(s)",
       details: data,
     });
   } catch (error) {

@@ -1,23 +1,19 @@
-/*Admin Routes
-/admin                  // Create a new admin account
-/admin/currency         // Create a new currency account
-/admin/:user_id         // Check a user's account
-/admin/:user_id         // Close down a user's account
-*/
+// /admin/:user_id         // Close down a user's account
+// */
 // A default/ super admin can make other users admins.
 
 // Admins can close down user accounts, but would send a warning email to the user before doing so..
-
 import client from "../config/db.js";
 import { hashPassword } from "../utils/hash.js";
 import { createProfileSchema, currencySchema } from "../validation/Schemas.js";
 import { loginSchema } from "../validation/Schemas.js";
-import { currencySchema } from "../validation/Schemas.js";
+import { accountSchema } from "../validation/Schemas.js";
 import { generateToken } from "../utils/jwt.js";
 import { passwordMatches } from "../utils/hash.js";
 import { sendAdminRegisterEmail } from "../utils/nodeMailer.js";
 import { getCurrencyList } from "./layer.js";
 import { isSupportedCurrency } from "./layer.js";
+import { verifyAdminToken } from "../utils/jwt.js";
 
 async function checkIfUserExists(email) {
   const query = `
@@ -59,8 +55,12 @@ export async function createAdminAccount(payload) {
   if (error) {
     return false;
   }
-  const { first_name, last_name, email, password } = value;
+  const { first_name, last_name, email, password, token } = value;
   try {
+    const tokenVerified = await verifyAdminToken(token);
+    if (!tokenVerified) {
+      return "Invalid token";
+    }
     const userExists = await checkIfUserExists(email);
     if (userExists) {
       console.log("User exists");
@@ -82,11 +82,10 @@ export async function createAdminAccount(payload) {
       admin_email: details.admin_email,
     };
     console.log(result.rows);
-    const token = await generateToken(value);
     console.log("Registration Successful, user token generated");
     const response = sendAdminRegisterEmail(email);
     console.log(response);
-    return { userData, token };
+    return { userData };
   } catch (error) {
     console.log(error.message);
     throw error;
@@ -173,6 +172,24 @@ export async function createCurrency(admin_email, payload) {
   }
 }
 
+function getUsersDetails(rows) {
+  const userDetails = [];
+
+  for (const row of rows) {
+    const userDetail = {
+      account_id: row.account_id,
+      user_email: row.user_email,
+      account_number: row.account_number,
+      currency_code: row.currency_code,
+      account_status: row.account_status,
+    };
+
+    userDetails.push(userDetail);
+  }
+
+  return userDetails;
+}
+
 // Admins can access users with the same currency, excluding sensitive details.
 export async function getUserAccountWithSameCurrency(admin_email, payload) {
   const { error, value } = currencySchema.validate(payload);
@@ -197,7 +214,49 @@ export async function getUserAccountWithSameCurrency(admin_email, payload) {
       console.log("No Account with specified currency available");
       return "No Account with specified currency available";
     }
-    return result.rows[0];
+
+    const { userDetails } = getUsersDetails(result.rows);
+
+    return userDetails;
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+}
+
+// Check a user's account
+export async function getUserAccount(admin_email, payload) {
+  const { error, value } = accountSchema.validate(payload);
+  if (error) {
+    return "Invalid Request";
+  }
+  const { account_number } = value;
+  try {
+    const adminConfirmed = await checkAdminEmail(admin_email);
+    if (!adminConfirmed) {
+      console.log("You are not allowed to carry this action");
+      return "You are not allowed to carry this action";
+    }
+    query = `
+    SELECT *
+    FROM account
+    WHERE account_number = $1
+    `;
+    const values = [account_number];
+    result = client.query(query, values);
+    if (!result.rows[0]) {
+      console.log("No Account with account number available");
+      return "No Account with account number available";
+    }
+    const details = {
+      account_id: result.rows[0].account_id,
+      user_email: result.rows[0].user_email,
+      account_number: result.rows[0].account_number,
+      currency_code: result.rows[0].currency_code,
+      account_status: result.rows[0].account_status,
+    };
+
+    return details;
   } catch (error) {
     console.log(error.message);
     throw error;
