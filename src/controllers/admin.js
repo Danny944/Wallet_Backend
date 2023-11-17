@@ -8,7 +8,7 @@ import { getUserAccount } from "../models/admin.js";
 export async function createAnAdminAccount(req, res) {
   try {
     const data = await createAdminAccount(req.body);
-    const { userData, token } = data;
+    const { userData, newToken } = data;
     if (data === "An admin with this email already exists") {
       return res
         .status(400)
@@ -18,13 +18,13 @@ export async function createAnAdminAccount(req, res) {
       return res.status(400).json({ error: "Invalid Request" });
     }
     if (data === "Invalid token") {
-      return res.status(400).json({ error: "Invalid token" });
+      return res.status(401).json({ error: "Invalid token" });
     }
     res.cookie("token", token);
     return res.status(201).json({
       message: "ADMIN REGISTRATION SUCESSFULL",
       Your_Details: userData,
-      token: token,
+      token: newToken,
     });
   } catch (error) {
     return res

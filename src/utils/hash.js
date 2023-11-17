@@ -9,3 +9,11 @@ export const hashPassword = (password) => {
 export const passwordMatches = async (password, userpassword) => {
   return await bcrypt.compare(password, userpassword);
 };
+
+// const logger = async (password) => {
+//   const pass = await hashPassword(password);
+//   console.log(pass);
+// };
+
+// // write const async format
+// logger("Fadexyfrosh");

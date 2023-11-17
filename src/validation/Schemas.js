@@ -96,3 +96,7 @@ export const currencySchema = Joi.object({
 export const accountSchema = Joi.object({
   account_number: Joi.number().integer().min(0).max(9999999999).required(),
 });
+
+export const createAdminSchema = Joi.object({
+  email: Joi.string().email().required(),
+});

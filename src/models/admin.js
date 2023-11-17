@@ -15,7 +15,7 @@ import { getCurrencyList } from "./layer.js";
 import { isSupportedCurrency } from "./layer.js";
 import { verifyAdminToken } from "../utils/jwt.js";
 
-async function checkIfUserExists(email) {
+export async function checkIfAdminExists(email) {
   const query = `
     SELECT COUNT(*) as count
     FROM admin
@@ -53,21 +53,25 @@ async function checkIfCurrencyExists(currency_code) {
 export async function createAdminAccount(payload) {
   const { error, value } = createProfileSchema.validate(payload);
   if (error) {
+    console.log(error);
     return false;
   }
   const { first_name, last_name, email, password, token } = value;
+  console.log(1);
   try {
     const tokenVerified = await verifyAdminToken(token);
+    console.log(tokenVerified);
     if (!tokenVerified) {
       return "Invalid token";
     }
-    const userExists = await checkIfUserExists(email);
+    const userExists = await checkIfAdminExists(email);
     if (userExists) {
       console.log("User exists");
       return "An admin with this email already exists";
     }
+    console.log(2);
     const hashedPassword = await hashPassword(password);
-
+    console.log(3);
     const query = `
         INSERT INTO admin (first_name, last_name, admin_email, admin_password) 
         VALUES ($1, $2, $3, $4) 
@@ -75,17 +79,19 @@ export async function createAdminAccount(payload) {
         `;
     const values = [first_name, last_name, email, hashedPassword];
     const result = await client.query(query, values);
+    console.log(4);
     const details = result.rows[0];
     const userData = {
       first_name: details.first_name,
       last_name: details.last_name,
       admin_email: details.admin_email,
     };
+    const newToken = await generateToken(value);
     console.log(result.rows);
     console.log("Registration Successful, user token generated");
-    const response = sendAdminRegisterEmail(email);
+    const response = await sendAdminRegisterEmail(email);
     console.log(response);
-    return { userData };
+    return { userData, newToken };
   } catch (error) {
     console.log(error.message);
     throw error;
@@ -100,8 +106,8 @@ export async function adminLogin(payload) {
   }
   const { email, password } = value;
   try {
-    const userExists = await checkIfUserExists(email);
-    if (!userExists) {
+    const adminExists = await checkIfAdminExists(email);
+    if (!adminExists) {
       console.log("Admin doesn't exist");
       return "Admin doesn't exist";
     }

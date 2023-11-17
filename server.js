@@ -1,6 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
+import superAdminRoute from "./src/routes/superAdminRoute.js";
 import adminRoute from "./src/routes/adminRoute.js";
 import authUserRoute from "./src/routes/userAuthroute.js";
 import accountRoute from "./src/routes/accountRoute.js";
@@ -13,9 +15,9 @@ import morgan from "morgan";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+//import { authUser } from "./src/middlewares/authuser.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-//import { authUser } from "./src/middlewares/authuser.js";
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,9 +32,11 @@ app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use(bodyParser.json());
 app.use(cors());
+// app.use(cookieParser);
 
 app.use("/authUser", authUserRoute);
 // app.use(authUser);
+app.use("/superAdmin", superAdminRoute);
 app.use("/admin", adminRoute);
 app.use("/account", accountRoute);
 app.use("/deposit", depositRoute);
