@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
+import logger from "./src/config/logger.js";
 import cors from "cors";
 import superAdminRoute from "./src/routes/superAdminRoute.js";
 import adminRoute from "./src/routes/adminRoute.js";
@@ -15,7 +15,6 @@ import morgan from "morgan";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-//import { authUser } from "./src/middlewares/authuser.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -32,10 +31,8 @@ app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use(bodyParser.json());
 app.use(cors());
-// app.use(cookieParser);
 
 app.use("/authUser", authUserRoute);
-// app.use(authUser);
 app.use("/superAdmin", superAdminRoute);
 app.use("/admin", adminRoute);
 app.use("/account", accountRoute);
@@ -46,5 +43,5 @@ app.use("/withdraw", withdrawalsRoute);
 app.use("/transaction", transactionRoute);
 
 app.listen(6000, () => {
-  console.log("Server running on port 6000");
+  logger.info("Server running on port 6000");
 });

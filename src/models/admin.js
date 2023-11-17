@@ -27,7 +27,7 @@ export async function checkIfAdminExists(email) {
 }
 
 async function checkAdminEmail(email) {
-  query = `
+  const query = `
     SELECT * 
     FROM admin
     WHERE admin_email = $1
@@ -42,7 +42,7 @@ async function checkIfCurrencyExists(currency_code) {
   const query = `
     SELECT COUNT(*) as count
     FROM currencies
-    WHERE currency_code = 1
+    WHERE currency_code = $1
       `;
   const values = [currency_code];
   const result = await client.query(query, values);
@@ -89,8 +89,7 @@ export async function createAdminAccount(payload) {
     const newToken = await generateToken(value);
     console.log(result.rows);
     console.log("Registration Successful, user token generated");
-    const response = await sendAdminRegisterEmail(email);
-    console.log(response);
+    await sendAdminRegisterEmail(email);
     return { userData, newToken };
   } catch (error) {
     console.log(error.message);
@@ -118,7 +117,7 @@ export async function adminLogin(payload) {
         `;
     const values = [email];
     const result = await client.query(query, values);
-    const dbPassword = result.rows[0].password;
+    const dbPassword = result.rows[0].admin_password;
     const isMatch = await passwordMatches(password, dbPassword);
     if (!isMatch) {
       console.log("passwords don't match");
@@ -141,6 +140,7 @@ export async function createCurrency(admin_email, payload) {
     return "Invalid Request";
   }
   const { currency_code } = value;
+  console.log(admin_email);
 
   try {
     const adminConfirmed = await checkAdminEmail(admin_email);
@@ -161,8 +161,9 @@ export async function createCurrency(admin_email, payload) {
       console.log("Invalid or Unsupported currency");
       return "Invalid or Unsupported currency";
     }
+    console.log(data);
 
-    query = `
+    const query = `
     INSERT INTO currencies(currency_code)
     VALUES ($1)
     RETURNING *
@@ -209,19 +210,21 @@ export async function getUserAccountWithSameCurrency(admin_email, payload) {
       console.log("You are not allowed to carry this action");
       return "You are not allowed to carry this action";
     }
-    query = `
+    const query = `
     SELECT *
     FROM account
     WHERE currency_code = $1
     `;
     const values = [currency_code];
-    result = client.query(query, values);
+    const result = await client.query(query, values);
+    console.log(result.rows[0]);
     if (!result.rows[0]) {
       console.log("No Account with specified currency available");
       return "No Account with specified currency available";
     }
 
-    const { userDetails } = getUsersDetails(result.rows);
+    const userDetails = getUsersDetails(result.rows);
+    console.log(userDetails);
 
     return userDetails;
   } catch (error) {
@@ -243,13 +246,13 @@ export async function getUserAccount(admin_email, payload) {
       console.log("You are not allowed to carry this action");
       return "You are not allowed to carry this action";
     }
-    query = `
+    const query = `
     SELECT *
     FROM account
     WHERE account_number = $1
     `;
     const values = [account_number];
-    result = client.query(query, values);
+    const result = await client.query(query, values);
     if (!result.rows[0]) {
       console.log("No Account with account number available");
       return "No Account with account number available";
