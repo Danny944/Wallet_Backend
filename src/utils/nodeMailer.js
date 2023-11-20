@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Send an email with a password reset link to the recipient
 export async function sendEmail(recipient, token) {
@@ -7,7 +10,7 @@ export async function sendEmail(recipient, token) {
     service: "gmail",
     auth: {
       user: "fadehandaniel2006@gmail.com",
-      pass: "tjio hfws okxo dywz",
+      pass: process.env.GOOGLEPIN,
     },
   });
 
@@ -36,7 +39,7 @@ export async function sendRegisterEmail(recipient) {
     service: "gmail",
     auth: {
       user: "fadehandaniel2006@gmail.com",
-      pass: "tjio hfws okxo dywz",
+      pass: process.env.GOOGLEPIN,
     },
   });
 
@@ -61,7 +64,7 @@ export async function sendAdminRegisterEmail(recipient) {
     service: "gmail",
     auth: {
       user: "fadehandaniel2006@gmail.com",
-      pass: "tjio hfws okxo dywz",
+      pass: process.env.GOOGLEPIN,
     },
   });
 
@@ -86,7 +89,7 @@ export async function sendAdminRegisterTokenEmail(recipient, token) {
     service: "gmail",
     auth: {
       user: "fadehandaniel2006@gmail.com",
-      pass: "tjio hfws okxo dywz",
+      pass: process.env.GOOGLEPIN,
     },
   });
 

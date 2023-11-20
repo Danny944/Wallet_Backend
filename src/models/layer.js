@@ -1,4 +1,7 @@
 import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Perform currency conversion using an external API based on sender and
 //receiver currencies and an amount.
@@ -7,7 +10,7 @@ export async function currencyConverter(
   sender_currency,
   amount
 ) {
-  const apiKey = "A3cdWZEWju4CO0f1RnblKW9LRKirtb62";
+  const apiKey = process.env.APIKEY;
 
   // Construct the URL with the actual values
   const url = `https://api.apilayer.com/exchangerates_data/convert?to=${receiver_currency}&from=${sender_currency}&amount=${amount}`;
@@ -30,7 +33,7 @@ export async function currencyConverter(
 }
 
 export async function getCurrencyList() {
-  const apiKey = "A3cdWZEWju4CO0f1RnblKW9LRKirtb62";
+  const apiKey = process.env.APIKEY;
   const url = "https://api.apilayer.com/currency_data/list";
 
   try {

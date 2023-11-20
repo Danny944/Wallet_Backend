@@ -1,27 +1,33 @@
 import { getAllTransactions } from "../models/transactions.js";
 import logger from "../config/logger.js";
+import { generatePDF } from "../utils/pdfMaker.js";
 
-// Deposit funds into an account
+// Get transactions
 export async function getAllTheTransactions(req, res) {
   try {
     const user_email = req.user_email;
-    const data = await getAllTransactions(user_email);
-    if (!data) {
+    const transactions = await getAllTransactions(user_email);
+    if (!transactions) {
       logger.error("No transactions carried out on this profile");
       return res
         .status(404)
         .json({ error: "No transactions carried out on this profile" });
     }
-    // if (data === "You are not allowed to carry out this action") {
-    //   return res
-    //     .status(400)
-    //     .json({ error: "You are not allowed to carry out this action" });
-    // }
-    logger.info("Transactions", data);
-    return res.status(201).json({
-      message: "Transactions",
-      Details: data,
+    logger.info("Transactions", transactions);
+    const stream = res.writeHead(200, {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment;filename=Transactions-history.pdf",
     });
+
+    generatePDF(
+      JSON.stringify(transactions, "", "\n"),
+      (chunk) => stream.write(chunk),
+      () => stream.end()
+    );
+    // return res.status(201).json({
+    //   message: "Transactions",
+    //   Details: transactions,
+    // });
   } catch (error) {
     logger.error(error.message);
     return res

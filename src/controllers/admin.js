@@ -4,7 +4,6 @@ import { adminLogin } from "../models/admin.js";
 import { createCurrency } from "../models/admin.js";
 import { getUserAccountWithSameCurrency } from "../models/admin.js";
 import { getUserAccount } from "../models/admin.js";
-import logger from "../config/logger.js";
 
 //Create admin Account
 export async function createAnAdminAccount(req, res) {

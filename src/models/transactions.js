@@ -25,6 +25,7 @@ export async function getAllTransactions(user_email) {
           LEFT JOIN transfers ON users.user_email = transfers.user_email
           LEFT JOIN withdrawals ON users.user_email = withdrawals.user_email
           WHERE users.user_email = $1
+          LIMIT 1
         `;
     const values = [user_email];
     const result = await client.query(query, values);

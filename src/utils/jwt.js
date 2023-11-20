@@ -1,25 +1,28 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Generate a JSON Web Token (JWT) with the provided payload
 export async function generateToken(payload) {
-  const generatedToken = jwt.sign(payload, "IIVSIUVISUBCIBUIWVFYUVWVY", {
-    expiresIn: "24h",
+  const generatedToken = jwt.sign(payload, process.env.ATOKEN, {
+    expiresIn: "1h",
   });
   return generatedToken;
 }
 
 // Verify and decode a JWT to extract the payload
 export async function verifyToken(generatedToken) {
-  return jwt.verify(generatedToken, "IIVSIUVISUBCIBUIWVFYUVWVY");
+  return jwt.verify(generatedToken, process.env.ATOKEN);
 }
 
 export async function generateAdminToken(payload) {
-  const generatedToken = jwt.sign(payload, "IOSNCNCSOCINOICOIIKCI", {
-    expiresIn: "24h",
+  const generatedToken = jwt.sign(payload, process.env.ADMINTOKEN, {
+    expiresIn: "1h",
   });
   return generatedToken;
 }
 
 export async function verifyAdminToken(generatedToken) {
-  return jwt.verify(generatedToken, "IOSNCNCSOCINOICOIIKCI");
+  return jwt.verify(generatedToken, process.env.ADMINTOKEN);
 }
