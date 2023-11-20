@@ -6,7 +6,7 @@ const client = new Client({
   port: 5432,
   database: "Bank-Wallet",
   user: "postgres",
-  password: "password",
+  password: "196976",
 });
 
 client.connect((err) => {
