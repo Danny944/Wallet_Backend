@@ -1,9 +1,5 @@
 import pg from "pg";
-import { config } from "../config/env.js";
 const { Client } = pg;
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const client = new Client({
   host: config.DB_HOST,
