@@ -2,11 +2,11 @@ import pg from "pg";
 const { Client } = pg;
 
 const client = new Client({
-  host: config.DB_HOST,
-  port: config.DB_PORT,
+  host: "host",
+  port: 5432,
   database: "Bank-Wallet",
   user: "postgres",
-  password: config.DB_PASSWORD,
+  password: "password",
 });
 
 client.connect((err) => {
