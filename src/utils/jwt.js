@@ -11,7 +11,7 @@ export async function generateToken(payload) {
   return generatedToken;
 }
 
-// Verify and decode a JWT to extract the payload
+// Verify and decode a JWT to extract the payload ..
 export async function verifyToken(generatedToken) {
   return jwt.verify(generatedToken, process.env.ATOKEN);
 }
