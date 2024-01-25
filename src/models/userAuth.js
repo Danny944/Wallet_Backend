@@ -24,16 +24,15 @@ async function checkIfUserExists(email) {
 export async function createUserProfile(payload) {
   const { error, value } = createProfileSchema.validate(payload);
   if (error) {
-    throw new Error("Invalid payload");
+    return "Invalid Payload";
   }
   const { first_name, last_name, email, password } = value;
   try {
     const userExists = await checkIfUserExists(email);
     if (userExists) {
-      throw new Error("User exists");
+      return "User exists";
     }
     const hashedPassword = await hashPassword(password);
-    console.log(hashedPassword);
     const query = `
       INSERT INTO users (first_name, last_name, user_email, password) 
       VALUES ($1, $2, $3, $4) 
@@ -62,13 +61,13 @@ export async function createUserProfile(payload) {
 export async function userLogin(payload) {
   const { error, value } = loginSchema.validate(payload);
   if (error) {
-    throw new Error("Invalid Request");
+    return "Invalid Request";
   }
   const { email, password } = value;
   try {
     const userExists = await checkIfUserExists(email);
     if (!userExists) {
-      throw new Error("User doesn't exist");
+      return "User doesn't exist";
     }
     const query = `
       SELECT password

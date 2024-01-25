@@ -8,31 +8,29 @@ import { reset } from "../models/userAuth.js";
 export async function createAUserProfile(req, res) {
   try {
     const data = await createUserProfile(req.body);
-    if (data) {
-      const { userData, token } = data;
-      logger.info("REGISTRATION SUCCESSFUL", userData);
-      res.cookie("token", token);
-      return res.status(201).json({
-        message: "REGISTRATION SUCCESSFUL",
-        Your_Details: userData,
-        token: token,
-      });
-    }
-  } catch (error) {
-    if (error.message.includes("Invalid payload")) {
+    if (data === "Invalid payload") {
       logger.error("Invalid payload");
       return res.status(400).json({ error: "Invalid Request" });
-    } else if (error.message.includes("User exists")) {
+    }
+    if (data === "User exists") {
       logger.error("User exists");
       return res
         .status(409)
         .json({ error: "An account with this email exists already" });
-    } else {
-      logger.error(error.message);
-      return res
-        .status(500)
-        .json({ message: "Internal Server Error", error: error.message });
     }
+    const { userData, token } = data;
+    logger.info("REGISTRATION SUCCESSFUL", userData);
+    res.cookie("token", token);
+    return res.status(201).json({
+      message: "REGISTRATION SUCCESSFUL",
+      Your_Details: userData,
+      token: token,
+    });
+  } catch (error) {
+    logger.error(error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 }
 

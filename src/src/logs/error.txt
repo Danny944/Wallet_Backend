@@ -17,3 +17,5 @@
 {"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
 {"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
 {"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User exists","timestamp":"2024-01-25"}
+{"level":"error","message":"secretOrPrivateKey must have a value","timestamp":"2024-01-25"}
