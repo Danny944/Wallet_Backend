@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 
 // Hash a plain text password
-export const hashPassword = (password) => {
-  return bcrypt.hash(password, 5);
+export const hashPassword = async (password) => {
+  return await bcrypt.hash(password, 5);
 };
 
 // Verify if a plain text password matches a hashed password

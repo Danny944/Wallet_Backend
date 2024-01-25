@@ -33,7 +33,7 @@ export async function createUserProfile(payload) {
       throw new Error("User exists");
     }
     const hashedPassword = await hashPassword(password);
-
+    console.log(hashedPassword);
     const query = `
       INSERT INTO users (first_name, last_name, user_email, password) 
       VALUES ($1, $2, $3, $4) 
@@ -41,7 +41,9 @@ export async function createUserProfile(payload) {
     `;
     const values = [first_name, last_name, email, hashedPassword];
     const result = await client.query(query, values);
+    console.log(result.r);
     const details = result.rows[0];
+    console.log(details);
     const userData = {
       first_name: details.first_name,
       last_name: details.last_name,
@@ -51,6 +53,7 @@ export async function createUserProfile(payload) {
     sendRegisterEmail(email);
     return { userData, token };
   } catch (error) {
+    console.error("Registration failed", error);
     throw new Error("User registration failed");
   }
 }

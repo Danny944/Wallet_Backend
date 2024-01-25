@@ -5,7 +5,7 @@ export const createProfileSchema = Joi.object({
   last_name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  token: Joi.string().required(),
+  // token: Joi.string().required(),
 });
 
 export const loginSchema = Joi.object({

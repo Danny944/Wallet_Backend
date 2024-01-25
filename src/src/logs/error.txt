@@ -1,0 +1,19 @@
+{"level":"error","message":"secretOrPrivateKey must have a value","timestamp":"2024-01-25"}
+{"level":"error","message":"Invalid payload","timestamp":"2024-01-25"}
+{"level":"error","message":"Invalid payload","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
+{"level":"error","message":"User registration failed","timestamp":"2024-01-25"}
