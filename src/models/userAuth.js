@@ -78,13 +78,14 @@ export async function userLogin(payload) {
     const result = await client.query(query, values);
     const dbPassword = result.rows[0] ? result.rows[0].password : null;
     if (!dbPassword) {
-      throw new Error("Invalid Email/Password");
+      return "Invalid Email/Password";
     }
     const isMatch = await passwordMatches(password, dbPassword);
     if (!isMatch) {
-      throw new Error("Invalid Email/Password");
+      return "Invalid Email/Password";
     }
     const token = await generateToken(value);
+    console.log(token);
     return token;
   } catch (error) {
     throw error;
@@ -95,14 +96,14 @@ export async function userLogin(payload) {
 export const sendResetLink = async (payload) => {
   const { error, value } = resetSchema.validate(payload);
   if (error) {
-    throw new Error("Invalid Request");
+    return "Invalid Request";
   }
   const { email } = value;
 
   const userExists = await checkIfUserExists(email);
   if (!userExists) {
     console.log("User doesn't exist");
-    throw new Error("User doesn't exist");
+    return "User doesn't exist";
   }
 
   try {
@@ -120,7 +121,7 @@ export async function reset(user_email, userPassword) {
   const { password, confirm_password } = userPassword;
   if (password !== confirm_password) {
     console.log("Passwords don't match");
-    throw new Error("Passwords don't match");
+    return "Passwords don't match";
   }
   const hashedPassword = await hashPassword(confirm_password);
   try {
@@ -133,7 +134,7 @@ export async function reset(user_email, userPassword) {
     const values0 = [hashedPassword, user_email];
     const result = await client.query(query0, values0);
     if (result.rowCount === 0) {
-      throw new Error("Unable to Update Database");
+      return "Unable to Update Database";
     }
     return result.rows;
   } catch (err) {

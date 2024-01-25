@@ -5,7 +5,7 @@ dotenv.config();
 
 // Generate a JSON Web Token (JWT) with the provided payload
 export async function generateToken(payload) {
-  const generatedToken = jwt.sign(payload, process.env.ATOKEN, {
+  const generatedToken = jwt.sign(payload, process.env.ACCESSTOKEN, {
     expiresIn: "1h",
   });
   return generatedToken;

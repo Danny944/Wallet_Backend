@@ -39,26 +39,21 @@ export async function logUser(req, res) {
   try {
     const data = await userLogin(req.body);
 
-    if (data) {
-      logger.info("LOGIN SUCCESSFUL", data);
-      res.cookie("token", data, { httpOnly: true });
-      return res.status(201).json({
-        message: "LOGIN SUCCESSFUL",
-        token: data,
-      });
-    }
-  } catch (error) {
-    if (error.message.includes("Invalid Request")) {
+    if (data === "Invalid Request") {
       logger.error("Invalid Request");
       return res.status(400).json({ error: "Invalid Request" });
     }
-    if (
-      error.message.includes("User doesn't exist") ||
-      error.message.includes("Invalid Email/Password")
-    ) {
+    if (data === "User doesn't exist" || "Invalid Email/Password") {
       logger.error("Invalid Email/Password");
       return res.status(401).json({ error: "Invalid Email/Password" });
     }
+    logger.info("LOGIN SUCCESSFUL", data);
+    res.cookie("token", data, { httpOnly: true });
+    return res.status(201).json({
+      message: "LOGIN SUCCESSFUL",
+      token: data,
+    });
+  } catch (error) {
     logger.error(error.message);
     return res
       .status(500)
