@@ -24,3 +24,25 @@
 {"level":"error","message":"secretOrPrivateKey must have a value","timestamp":"2024-01-25"}
 {"level":"error","message":"secretOrPrivateKey must have a value","timestamp":"2024-01-25"}
 {"level":"error","message":"secretOrPrivateKey must have a value","timestamp":"2024-01-25"}
+{"level":"error","message":"secretOrPrivateKey must have a value","timestamp":"2024-01-25"}
+{"level":"error","message":"Invalid Email/Password","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"User login failed","timestamp":"2024-01-26"}
+{"level":"error","message":"Invalid Email/Password","timestamp":"2024-01-26"}
+{"date":"Fri Jan 26 2024 10:00:59 GMT+0100 (West Africa Standard Time)","error":{},"exception":true,"level":"error","message":"unhandledRejection: Email could not be sent.\nError: Email could not be sent.\n    at sendRegisterEmail (file:///C:/Users/solaf/OneDrive/Desktop/Bank%20wallet%20API/src/utils/nodeMailer.js:58:11)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","os":{"loadavg":[0,0,0],"uptime":1029.156},"process":{"argv":["C:\\Program Files\\nodejs\\node.exe","C:\\Users\\solaf\\OneDrive\\Desktop\\Bank wallet API\\src\\server.js"],"cwd":"C:\\Users\\solaf\\OneDrive\\Desktop\\Bank wallet API\\src","execPath":"C:\\Program Files\\nodejs\\node.exe","gid":null,"memoryUsage":{"arrayBuffers":436432,"external":2224739,"heapTotal":27901952,"heapUsed":25466920,"rss":66490368},"pid":5444,"uid":null,"version":"v18.17.1"},"stack":"Error: Email could not be sent.\n    at sendRegisterEmail (file:///C:/Users/solaf/OneDrive/Desktop/Bank%20wallet%20API/src/utils/nodeMailer.js:58:11)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","timestamp":"2024-01-26","trace":[{"column":11,"file":"file:///C:/Users/solaf/OneDrive/Desktop/Bank%20wallet%20API/src/utils/nodeMailer.js","function":"sendRegisterEmail","line":58,"method":null,"native":false},{"column":5,"file":"node:internal/process/task_queues","function":"process.processTicksAndRejections","line":95,"method":"processTicksAndRejections","native":false}]}
+{"level":"error","message":"User exists","timestamp":"2024-01-26"}
+{"level":"error","message":"Invalid Email/Password","timestamp":"2024-01-26"}
+{"level":"error","message":"User exists","timestamp":"2024-01-26"}
+{"level":"error","message":"Invalid Email/Password","timestamp":"2024-01-26"}
+{"level":"error","message":"Invalid Email/Password","timestamp":"2024-01-26"}
+{"level":"error","message":"Invalid Email/Password","timestamp":"2024-01-26"}
+{"level":"error","message":"Invalid Email/Password","timestamp":"2024-01-26"}
+{"level":"error","message":"Invalid Email/Password","timestamp":"2024-01-26"}
+{"level":"error","message":"jwt expired","timestamp":"2024-01-26"}

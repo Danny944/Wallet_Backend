@@ -43,7 +43,11 @@ export async function logUser(req, res) {
       logger.error("Invalid Request");
       return res.status(400).json({ error: "Invalid Request" });
     }
-    if (data === "User doesn't exist" || "Invalid Email/Password") {
+    if (data === "User doesn't exist") {
+      logger.error("Invalid Email/Password");
+      return res.status(401).json({ error: "Invalid Email/Password" });
+    }
+    if (data === "Invalid Email/Password") {
       logger.error("Invalid Email/Password");
       return res.status(401).json({ error: "Invalid Email/Password" });
     }
@@ -66,21 +70,19 @@ export async function sendAResetLink(req, res) {
   try {
     const { response } = await sendResetLink(req.body);
 
-    if (response) {
-      logger.info("YOUR RESET LINK HAS BEEN SENT TO YOUR EMAIL");
-      return res.status(201).json({
-        message: "YOUR RESET LINK HAS BEEN SENT TO YOUR EMAIL",
-      });
-    }
-  } catch (error) {
-    if (error.message.includes("Invalid Request")) {
+    if (response === "Invalid Request") {
       logger.error("Invalid Request");
       return res.status(400).json({ error: "Invalid Request" });
     }
-    if (error.message.includes("User doesn't exist")) {
+    if (response === "User doesn't exist") {
       logger.error("User doesn't exist");
       return res.status(404).json({ error: "User with email doesn't exist" });
     }
+    logger.info("YOUR RESET LINK HAS BEEN SENT TO YOUR EMAIL");
+    return res.status(201).json({
+      message: "YOUR RESET LINK HAS BEEN SENT TO YOUR EMAIL",
+    });
+  } catch (error) {
     logger.error(error.message);
     return res
       .status(500)
@@ -94,27 +96,25 @@ export async function resetPassword(req, res) {
     const { email } = await req.user;
     const data = await reset(email, req.body);
 
-    if (data) {
-      logger.info("PASSWORD HAS BEEN UPDATED SUCCESSFULLY");
-      return res.status(201).json({
-        message: "PASSWORD HAS BEEN UPDATED SUCCESSFULLY",
-      });
-    }
-  } catch (error) {
-    if (error.message.includes("Passwords don't match")) {
+    if (data === "Passwords don't match") {
       logger.error("Passwords don't match");
       return res.status(400).json({ error: "Passwords don't match" });
-    } else if (error.message.includes("Unable to Update Database")) {
+    }
+    if (data === "Unable to Update Database") {
       logger.error("Unable to Update Database");
       return res.status(500).json({
         message: "Internal Server Error",
         error: "Unable to Update Database",
       });
-    } else {
-      logger.error(error.message);
-      return res
-        .status(500)
-        .json({ message: "Internal Server Error", error: error.message });
     }
+    logger.info("PASSWORD HAS BEEN UPDATED SUCCESSFULLY");
+    return res.status(201).json({
+      message: "PASSWORD HAS BEEN UPDATED SUCCESSFULLY",
+    });
+  } catch (error) {
+    logger.error(error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 }

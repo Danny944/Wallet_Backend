@@ -76,7 +76,9 @@ export async function userLogin(payload) {
     `;
     const values = [email];
     const result = await client.query(query, values);
+    console.log(result.rows);
     const dbPassword = result.rows[0] ? result.rows[0].password : null;
+    console.log(dbPassword);
     if (!dbPassword) {
       return "Invalid Email/Password";
     }
@@ -85,10 +87,10 @@ export async function userLogin(payload) {
       return "Invalid Email/Password";
     }
     const token = await generateToken(value);
-    console.log(token);
     return token;
   } catch (error) {
-    throw error;
+    console.error("Error", error);
+    throw new Error("User login failed");
   }
 }
 

@@ -10,7 +10,7 @@ export async function sendEmail(recipient, token) {
     service: "gmail",
     auth: {
       user: "fadehandaniel2006@gmail.com",
-      pass: process.env.GOOGLEPIN,
+      pass: "tjio hfws okxo dywz",
     },
   });
 
@@ -39,7 +39,7 @@ export async function sendRegisterEmail(recipient) {
     service: "gmail",
     auth: {
       user: "fadehandaniel2006@gmail.com",
-      pass: process.env.GOOGLEPIN,
+      pass: "tjio hfws okxo dywz",
     },
   });
 
@@ -64,7 +64,7 @@ export async function sendAdminRegisterEmail(recipient) {
     service: "gmail",
     auth: {
       user: "fadehandaniel2006@gmail.com",
-      pass: process.env.GOOGLEPIN,
+      pass: "tjio hfws okxo dywz",
     },
   });
 
@@ -89,7 +89,7 @@ export async function sendAdminRegisterTokenEmail(recipient, token) {
     service: "gmail",
     auth: {
       user: "fadehandaniel2006@gmail.com",
-      pass: process.env.GOOGLEPIN,
+      pass: "tjio hfws okxo dywz",
     },
   });
 
