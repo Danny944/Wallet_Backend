@@ -1,7 +1,4 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 // Send an email with a password reset link to the recipient
 export async function sendEmail(recipient, token) {
